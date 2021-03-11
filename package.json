@@ -1,0 +1,18 @@
+{
+  "name": "web_page_scanner",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Scans a webpage for key words and emails you.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aaron Bruckner",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.8.0",
+    "commander": "^7.1.0",
+    "puppeteer": "^8.0.0",
+    "simple-node-logger": "^18.12.24"
+  }
+}
