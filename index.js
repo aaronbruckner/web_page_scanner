@@ -1,10 +1,12 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import {program} from 'commander';
 import simpleNodeLogger from 'simple-node-logger';
 import {SNSClient, PublishCommand} from "@aws-sdk/client-sns";
 import fs from 'fs';
 
 const log = simpleNodeLogger.createSimpleLogger();
+puppeteer.use(StealthPlugin())
 
 /**
  * Example:
