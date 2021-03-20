@@ -10,7 +10,7 @@ puppeteer.use(StealthPlugin())
 
 /**
  * Example:
- *   node index.js --urls https://www.google.com --validCssSelector "Out of stock" --awsSnsArn arn:aws:sns:us-west-2:11111111:Alert --subject "IN STOCK ALERT" --lockFile /home/ubuntu/lock.txt 
+ *   node index.js --urls https://www.google.com --validCssSelector "span.stock-result" --awsSnsArn arn:aws:sns:us-west-2:11111111:Alert --subject "IN STOCK ALERT" --lockFile /home/ubuntu/lock.txt 
  */
 async function main() {
     log.info('Web Page Scanner');
