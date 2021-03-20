@@ -10,16 +10,16 @@ puppeteer.use(StealthPlugin())
 
 /**
  * Example:
- *   node index.js --urls https://www.google.com --invalidWords "Out of stock" --awsSnsArn arn:aws:sns:us-west-2:11111111:Alert --subject "IN STOCK ALERT" --lockFile /home/ubuntu/lock.txt 
+ *   node index.js --urls https://www.google.com --validCssSelector "Out of stock" --awsSnsArn arn:aws:sns:us-west-2:11111111:Alert --subject "IN STOCK ALERT" --lockFile /home/ubuntu/lock.txt 
  */
 async function main() {
     log.info('Web Page Scanner');
 
     program
         .requiredOption('-u, --urls [urls...]', 'Specifies the webpages to scan. Each URL provided will be processed')
-        .requiredOption('-i, --invalidWords [words...]', 'If all the provided words are missing from the page, a notification will be sent.')
         .requiredOption('-a, --awsSnsArn [arn]', 'If matches are found, the provided AWS SNS Arn will be notified.')
         .requiredOption('-s, --subject [subject]', 'If a notification is sent, this will be used as the subject line.')
+        .requiredOption('-c, --validCssSelector [cssSelector]', "Allows you to specify a CSS selector. If at least one element is found on the page, the page will be considered valid.")
         .option('-l, --lockFile [path]', 'Path to a local file. If present, script will not run. Script will touch this file once a notification has been sent, preventing you from getting spammed.')
         .option('-d, --debug', 'If provided, debug logs will be printed.')
         
@@ -59,25 +59,13 @@ async function scanPage(url, browser, opts) {
     const page = await browser.newPage();
     log.info(`Loading Page: ${url}`);
     await page.goto(url, {waitUntil: 'networkidle0'});
-    log.info('Page Loaded');
 
-    const content = await page.content();
+    const validElements = await page.$$(opts.validCssSelector)
+    log.info(`Page Loaded, Valid Elements Found: ${validElements.length}`);
 
-    log.debug(`Page Content:\n\n${content}\n\n`);
     await page.close();
 
-    return isValidPage(content, opts);
-}
-
-async function isValidPage(content, opts) {
-    for (const invalidWord of opts.invalidWords) {
-        if (content.includes(invalidWord)) {
-            log.info(`Page contained invalid word: "${invalidWord}"`)
-            return false;
-        }
-    }
-    
-    return true;
+    return validElements.length > 0
 }
 
 async function notify(urls, opts) {
