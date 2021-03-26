@@ -45,6 +45,7 @@ async function main() {
         if (await scanPage(url, browser, opts)) {
             log.info(`Valid Page: ${url}`);
             validUrls.push(url);
+            break;
         }
     }
 
